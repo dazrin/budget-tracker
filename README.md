@@ -17,8 +17,8 @@ Link to deployed application: https://safe-basin-75649.herokuapp.com/
 2. Enter an amount of money for the transaction you will be inputting
 3. Click either the Add or Subtract buttons to add or subtract the specified amount of money for the transaction
 
-## Screenshots
-
+## Screenshot
+![](https://i.imgur.com/zhNoBlw.png)
 
 ## License
 MIT License

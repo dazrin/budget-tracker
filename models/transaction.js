@@ -1,7 +1,10 @@
+// Dependancies
 const mongoose = require("mongoose");
 
+// Define Schema as mongoose Schema
 const Schema = mongoose.Schema;
 
+// Define transaction model as a new mongoose Schema
 const transactionSchema = new Schema(
   {
     name: {
@@ -20,6 +23,8 @@ const transactionSchema = new Schema(
   }
 );
 
+// Define Transaction as transaction model schema
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
+// Export model
 module.exports = Transaction;

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // Define Schema as mongoose Schema
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 // Define transaction model as a new mongoose Schema
 const transactionSchema = new Schema(
@@ -19,8 +19,8 @@ const transactionSchema = new Schema(
     date: {
       type: Date,
       default: Date.now
-    }
-  }
+    },
+  },
 );
 
 // Define Transaction as transaction model schema

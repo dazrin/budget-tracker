@@ -26,47 +26,45 @@ self.addEventListener("install", (evt) => {
 });
 
 // Code to enable service worker
-self.addEventListener("activate", (evt) => {
+self.addEventListener('activate', (evt) => {
   evt.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(
-        keyList.map(key => {
-          if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-            console.log("Removing old cache data", key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keyList) => Promise.all(
+      keyList.map((key) => {
+        if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
+          console.log('Removing old cache data', key);
+          return caches.delete(key);
+        }
+      }),
+    )),
   );
+
   self.clients.claim();
 });
 
-// Code to fetch data from cache
-self.addEventListener("fetch", (evt) => {
-  if (evt.request.url.includes("/api/")) {
+// Fetch 
+self.addEventListener('fetch', (evt) => {
+  // Cache successful requests to the API
+  if (evt.request.url.includes('/api/')) {
     evt.respondWith(
-      caches.open(DATA_CACHE_NAME).then(cache => {
-        return fetch(evt.request)
-          .then(response => {
-            if (response.status === 200) {
-              cache.put(evt.request.url, response.clone());
-            }
-            return response;
-          })
-          .catch(err =>  cache.match(evt.request));
-      }).catch(err => console.log(err))
-    );
+      caches.open(DATA_CACHE_NAME).then((cache) => fetch(evt.request)
+        .then((response) => {
+          // If response is successful, clone it & store in cache
+          if (response.status === 200) {
+            cache.put(evt.request.url, response.clone());
+          }
 
+          return response;
+        })
+        .catch((err) =>
+         // Get from cache since network failed
+          cache.match(evt.request))).catch((err) => console.log(err)),
+    );
     return;
   }
 
+  // If not for api, serve static assets first
   evt.respondWith(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.match(evt.request).then(response => {
-        return response || fetch(evt.request);
-      });
-    })
+    caches.match(evt.request).then((response) => response || fetch(evt.request)),
   );
 });
 

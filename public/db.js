@@ -1,3 +1,5 @@
+const indexedDB = require(indexedDB);
+
 // Define DB
 let db;
 

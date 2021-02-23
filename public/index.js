@@ -1,44 +1,44 @@
+// Get indexedDB
+import { useIndexedDb, checkDatabase } from './indexedDB';
+
 let transactions = [];
 let myChart;
 
-fetch("/api/transaction")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    // save db data on global variable
-    transactions = data;
+fetch('/api/transaction')
+  .then((response) => response.json())
+  .then((data) => {
 
+    transactions = data;
     populateTotal();
     populateTable();
     populateChart();
   });
 
-function populateTotal() {
-  // reduce transaction amounts to a single total value
-  let total = transactions.reduce((total, t) => {
-    return total + parseInt(t.value);
-  }, 0);
+  function populateTotal() {
+    const total = transactions.reduce((total, t) => total + parseInt(t.value), 0);
+  
+    const totalEl = document.querySelector('#total');
+    totalEl.textContent = total;
+  }
 
-  let totalEl = document.querySelector("#total");
-  totalEl.textContent = total;
-}
-
-function populateTable() {
-  let tbody = document.querySelector("#tbody");
-  tbody.innerHTML = "";
-
-  transactions.forEach(transaction => {
-    // create and populate a table row
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${transaction.name}</td>
-      <td>${transaction.value}</td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
+  function populateTable() {
+    const tbody = document.querySelector('#tbody');
+    tbody.innerHTML = '';
+  
+    transactions.forEach((transaction) => {
+      let rowColor;
+      if (transaction.value < 0) {
+        rowColor = 'negative';
+      } else rowColor = 'positive';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="${rowColor}">${transaction.name}</td>
+        <td  class="${rowColor}">${transaction.value}</td>
+      `;
+  
+      tbody.appendChild(tr);
+    });
+  }
 
 function populateChart() {
   // Copy and reverse array
@@ -46,13 +46,13 @@ function populateChart() {
   let sum = 0;
 
   // Create labels to display date on chart
-  let labels = reversed.map(t => {
+  let labels = reversed.map((t) => {
     let date = new Date(t.date);
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   });
 
   // Create values 
-  let data = reversed.map(t => {
+  let data = reversed.map((t) => {
     sum += parseInt(t.value);
     return sum;
   });
@@ -72,9 +72,9 @@ function populateChart() {
             label: "Total Over Time",
             fill: true,
             backgroundColor: "#6666ff",
-            data
-        }]
-    }
+            data,
+        }],
+    },
   });
 }
 
@@ -84,19 +84,18 @@ function sendTransaction(isAdding) {
   let errorEl = document.querySelector(".form .error");
 
   // Validation for form
-  if (nameEl.value === "" || amountEl.value === "") {
-    errorEl.textContent = "Missing Information";
+  if (nameEl.value === '' || amountEl.value === '') {
+    errorEl.textContent = 'Missing Information';
     return;
   }
-  else {
-    errorEl.textContent = "";
-  }
+
+  errorEl.textContent = '';
 
   // Create record
-  let transaction = {
+  const transaction = {
     name: nameEl.value,
     value: amountEl.value,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
   };
 
   // Convert amount to negative if funds are being subtracted
@@ -113,35 +112,33 @@ function sendTransaction(isAdding) {
   populateTotal();
   
   // Send data to server
-  fetch("/api/transaction", {
-    method: "POST",
+  fetch('/api/transaction', {
+    method: 'POST',
     body: JSON.stringify(transaction),
     headers: {
-      Accept: "application/json, text/plain, */*",
-      "Content-Type": "application/json"
-    }
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
   })
-  .then(response => {    
-    return response.json();
-  })
-  .then(data => {
-    if (data.errors) {
-      errorEl.textContent = "Missing Information";
-    }
-    else {
-      // clear form
-      nameEl.value = "";
-      amountEl.value = "";
-    }
-  })
-  .catch(err => {
-    // If data fetch fails, save to db
-    saveRecord(transaction);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.errors) {
+        errorEl.textContent = 'Missing Information';
+      } else {
+      // Clear form
+        nameEl.value = '';
+        amountEl.value = '';
+      }
+    })
+    .catch((err) => {
+    // Fetch failed -> save to indexed db
+      console.log('Fetch failed, saving to IndexedDB');
+      useIndexedDb('budget', 'pending', 'add', transaction);
 
-    // Clear form
-    nameEl.value = "";
-    amountEl.value = "";
-  });
+      // Clear form
+      nameEl.value = '';
+      amountEl.value = '';
+    });
 }
 
 // Event listener for add button
@@ -153,3 +150,6 @@ document.querySelector("#add-btn").onclick = function() {
 document.querySelector("#sub-btn").onclick = function() {
   sendTransaction(false);
 };
+
+// Listen if app comes online
+window.addEventListener('online', checkDatabase);

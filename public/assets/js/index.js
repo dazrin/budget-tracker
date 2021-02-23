@@ -7,8 +7,6 @@ let myChart;
 
 // Request to get data
 fetch('/api/transaction')
-
-// Receive data as json
   .then((response) => response.json())
 
   .then((data) => {

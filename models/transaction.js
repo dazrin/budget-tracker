@@ -1,30 +1,30 @@
 // Dependancies
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// Define Schema as mongoose Schema
+// Deconstruct + store Schema from mongoose
 const { Schema } = mongoose;
 
-// Define transaction model as a new mongoose Schema
+// Define Schema of Transaction
 const transactionSchema = new Schema(
   {
     name: {
       type: String,
       trim: true,
-      required: "Enter a name for transaction"
+      required: 'Enter a name for transaction',
     },
     value: {
       type: Number,
-      required: "Enter an amount"
+      required: 'Enter an amount',
     },
     date: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
   },
 );
 
-// Define Transaction as transaction model schema
-const Transaction = mongoose.model("Transaction", transactionSchema);
+// Assign transaction Schema as a model
+const Transaction = mongoose.model('Transaction', transactionSchema);
 
-// Export model
+// Export Transaction model
 module.exports = Transaction;

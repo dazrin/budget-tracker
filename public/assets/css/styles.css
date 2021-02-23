@@ -1,0 +1,56 @@
+body {
+  font-size: 110%;
+  font-family: Arial;
+}
+
+.error {
+  color: red;
+}
+
+.wrapper {
+  margin: 0 auto;
+  max-width: 825px;
+  text-align: center;
+}
+
+#total {
+  color: #a4007b;
+}
+
+.button {
+  margin-top: 5px !important;
+}
+
+.transactions {
+  text-align: left;
+  max-height: 300px;
+  overflow: auto;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.header-icon {
+  height: 60px !important;
+  width: auto !important;
+  padding-bottom: 10px;
+}
+
+.no-margin {
+  margin: 0 5px !important;
+}
+
+label {
+  text-align: left;
+  margin-left: 5px !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.table:not(.unstackable) tr {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+  }
+
+  h1 {
+    margin-bottom: 0 !important;
+  }
+}

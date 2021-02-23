@@ -4,31 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#317EFB">
-  <link rel="shortcut icon" href="icons/icon-192x192.png" type="image/x-icon">
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.webmanifest">
-
+  <meta name="theme-color" content="#FEFEFE">
+  <link rel="apple-touch-icon" href="assets/img/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/icons/favicon.ico">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="manifest" href="/dist/manifest.json" />
   <title>Budget Tracker</title>
+  <meta name="keywords" content="budget tracker, planning, pwa, full-stack">
+  <meta name="description" content="Budget tracker Progessive Web Application">
 </head>
 <body>
   <div class="wrapper">
-    <div class="total">
-      <div class="total">Your total is: $<span id="total">0</span></div>
+    <h1 class="ui header grey animate__animated animate__fadeIn">
+      <img class="header-icon" src="dist/assets/icons/icon_96x96.png" width="60" height="60" alt="budget log book">
+      Budget Tracker
+    </h1>
+    <div class="ui statistic no-margin animate__animated animate__pulse">
+      <div class="value">
+        <i class="dollar icon grey"></i><span id="total">0</span>
+      </div>
+      <div class="label">
+        your total
+      </div>
     </div>
 
-    <div class="form">
-      <input type="text" id="t-name" placeholder="Name of transaction" />
-      <input type="number" min="0" id="t-amount" placeholder="Transaction amount" />
-      <button id="add-btn"><i class="fa fa-plus buttons"></i> Add Funds</button>
-      <button id="sub-btn"><i class="fa fa-minus"></i> Subtract Funds</button>
+    <form class="ui form no-margin">
+      <div class="fields">
+        <div class="twelve wide field ui left floated">
+          <label for="t-name">Transaction</label>
+          <input type="text" id="t-name" placeholder="Name of transaction"/>
+        </div>
+        <div class="four wide field">
+          <label for="t-amount">Amount</label>
+          <input type="number" min="0" id="t-amount" placeholder="$" />
+        </div>
+      </div>
+      <div id="add-btn" class="ui animated primary basic button animate__animated animate__zoomIn" tabindex="0">
+        <div class="visible content">Add Funds</div>
+        <div class="hidden content">
+          <i class="plus icon"></i>
+        </div>
+      </div>
+      <div id="sub-btn" class="ui animated secondary basic button animate__animated animate__zoomIn" tabindex="0">
+        <div class="visible content">Subtract Funds</div>
+        <div class="hidden content">
+          <i class="minus icon"></i>
+        </div>
+      </div>
       <p class="error"></p>
-    </div>
+    </form>
 
-    <div class="transactions">
-      <table>
+    <div class="transactions animate__animated animate__fadeIn">
+      <table class="ui compact striped celled table">
         <thead>
           <th>Transaction</th>
           <th>Amount</th>
@@ -39,19 +68,15 @@
       </table>
     </div>
     
-    <canvas id="myChart"></canvas>
+    <canvas id="myChart" class="chart"></canvas>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-  <script src="db.js"></script>
-  <script src="index.js"></script>
+  <script src="dist/index.bundle.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js")
-          .then(reg => {
-            console.log(reg);
-          });
+        navigator.serviceWorker.register("service-worker.js").then(reg => {
+        });
       });
     }
   </script>
